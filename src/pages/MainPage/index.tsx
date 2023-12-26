@@ -1,8 +1,8 @@
 import React from "react";
+import { Container } from "./styles";
 
 function MainPage() {
-  console.log(2222);
-  return <div>MainPage</div>;
+  return <Container>MainPage</Container>;
 }
 
 export default MainPage;
