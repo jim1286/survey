@@ -5,6 +5,7 @@ import { useAppDispatch } from "@/redux/hook";
 import { addBoard } from "@/redux/features";
 import { BoardTypeEnum } from "@/enums";
 import { nanoid } from "@reduxjs/toolkit";
+import { Board } from "@/interfaces";
 
 export interface Position {
   top: number | undefined;
@@ -51,13 +52,13 @@ function Toolbar() {
   }, [position]);
 
   const handleAdd = () => {
-    dispatch(
-      addBoard({
-        id: nanoid(),
-        title: "질문",
-        type: BoardTypeEnum.MULTIPLE_CHOICE,
-      })
-    );
+    const newBoard: Board = {
+      id: nanoid(),
+      necessary: false,
+      type: BoardTypeEnum.MULTIPLE_CHOICE,
+    };
+
+    dispatch(addBoard(newBoard));
   };
 
   return (

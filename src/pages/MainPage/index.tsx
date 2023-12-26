@@ -1,5 +1,5 @@
 import { BoardContainer, Container, ToolbarContainer } from "./styles";
-import { Board } from "@/components";
+import { BoardComponent } from "@/components";
 import { Toolbar } from "./components";
 import { useAppSelector } from "@/redux/hook";
 
@@ -10,7 +10,7 @@ function MainPage() {
     <Container>
       <BoardContainer>
         {boards.map((board) => (
-          <Board key={board.id} />
+          <BoardComponent key={board.id} board={board} />
         ))}
       </BoardContainer>
       <ToolbarContainer>
