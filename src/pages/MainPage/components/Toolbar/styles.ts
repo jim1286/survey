@@ -15,7 +15,6 @@ export const Container = styled.div.attrs<ContainerProps>((props) => ({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    cursor: "pointer",
     transition: "background-color 0.3s ease, box-shadow 0.3s ease",
     top: props.position.top && `${props.position.top}px`,
     bottom: props.position.bottom && `${props.position.bottom}px`,

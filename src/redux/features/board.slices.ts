@@ -1,14 +1,21 @@
+import { Board } from "@/interfaces";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
-type BoardSliceState = {};
+type BoardSliceState = {
+  boards: Board[];
+};
 
-const initialState: BoardSliceState = {};
+const initialState: BoardSliceState = { boards: [] };
 
 export const boardSlice = createSlice({
   name: "board",
   initialState,
-  reducers: {},
+  reducers: {
+    addBoard: (state, action: PayloadAction<Board>) => {
+      state.boards = state.boards.concat(action.payload);
+    },
+  },
 });
 
-// export const {} = boardSlice.actions;
+export const { addBoard } = boardSlice.actions;
 export default boardSlice.reducer;

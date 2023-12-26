@@ -1,6 +1,10 @@
 import { useEffect, useState, useTransition } from "react";
 import { Container } from "./styles";
 import { IconCirclePlus } from "@tabler/icons-react";
+import { useAppDispatch } from "@/redux/hook";
+import { addBoard } from "@/redux/features";
+import { BoardTypeEnum } from "@/enums";
+import { nanoid } from "@reduxjs/toolkit";
 
 export interface Position {
   top: number | undefined;
@@ -8,6 +12,7 @@ export interface Position {
 }
 
 function Toolbar() {
+  const dispatch = useAppDispatch();
   const defaultPosition = 320 * 2;
   const [isPending, startTransition] = useTransition();
   const [position, setPosition] = useState<Position>({
@@ -45,10 +50,24 @@ function Toolbar() {
     };
   }, [position]);
 
+  const handleAdd = () => {
+    dispatch(
+      addBoard({
+        id: nanoid(),
+        title: "질문",
+        type: BoardTypeEnum.MULTIPLE_CHOICE,
+      })
+    );
+  };
+
   return (
     !isPending && (
       <Container position={position}>
-        <IconCirclePlus />
+        <IconCirclePlus
+          onClick={handleAdd}
+          size={30}
+          style={{ cursor: "pointer" }}
+        />
       </Container>
     )
   );
