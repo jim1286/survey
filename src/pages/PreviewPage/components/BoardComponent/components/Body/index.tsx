@@ -6,7 +6,6 @@ import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import { setBoardResults } from "@/redux/features";
 import { nanoid } from "@reduxjs/toolkit";
 import { ChangeEvent, useEffect } from "react";
-import { LocalService } from "@/service";
 import { ChoiceComponent, ClearButton } from "./components";
 
 interface Props {
@@ -23,8 +22,8 @@ function Body({ type, boardId, necessary, options }: Props) {
 
   useEffect(() => {
     const debounceTimer = setTimeout(() => {
-      LocalService.set("boards", JSON.stringify(boards));
-      LocalService.set("boardResults", JSON.stringify(boardResults));
+      localStorage.setItem("boards", JSON.stringify(boards));
+      localStorage.setItem("boardResults", JSON.stringify(boardResults));
     }, 1000);
 
     return () => {

@@ -30,9 +30,17 @@ export const boardSlice = createSlice({
     setClickedBoardId: (state, action: PayloadAction<string>) => {
       state.clickedBoardId = action.payload;
     },
+    clearBoardResult: (state) => {
+      state.boardResults = [];
+    },
   },
 });
 
-export const { addBoard, setBoards, setBoardResults, setClickedBoardId } =
-  boardSlice.actions;
+export const {
+  addBoard,
+  setBoards,
+  setBoardResults,
+  setClickedBoardId,
+  clearBoardResult,
+} = boardSlice.actions;
 export default boardSlice.reducer;

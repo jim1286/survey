@@ -1,10 +1,9 @@
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
-import { BoardContainer, Container } from "./styles";
+import { BoardContainer, ButtonWrap, Container } from "./styles";
 import { BoardComponent } from "./components";
 import { Button } from "antd";
 import { useEffect, useState } from "react";
-import { setBoardResults, setBoards } from "@/redux/features";
-import { LocalService } from "@/service";
+import { clearBoardResult, setBoardResults, setBoards } from "@/redux/features";
 
 function PreviewPage() {
   const dispatch = useAppDispatch();
@@ -21,17 +20,23 @@ function PreviewPage() {
   }, []);
 
   const fetchLocalStorage = () => {
-    const localBoardResults = LocalService.get("boardResults");
-    const localBoards = LocalService.get("boards");
+    const localBoardResults = localStorage.getItem("boardResults");
+    const localBoards = localStorage.getItem("boards");
 
-    if (!localBoardResults || !localBoards) {
-      setIsLoading(false);
-      return;
+    if (localBoards) {
+      dispatch(setBoards(JSON.parse(localBoards)));
     }
 
-    dispatch(setBoardResults(JSON.parse(localBoardResults)));
-    dispatch(setBoards(JSON.parse(localBoards)));
+    if (localBoardResults) {
+      dispatch(setBoardResults(JSON.parse(localBoardResults)));
+    }
+
     setIsLoading(false);
+  };
+
+  const handleClearResult = () => {
+    dispatch(clearBoardResult());
+    localStorage.removeItem("boardResults");
   };
 
   return (
@@ -42,7 +47,12 @@ function PreviewPage() {
             <BoardComponent key={board.id} board={board} />
           ))}
         </BoardContainer>
-        <Button>제출</Button>
+        <ButtonWrap>
+          <Button>제출</Button>
+          <Button type="text" onClick={handleClearResult}>
+            양식 지우기
+          </Button>
+        </ButtonWrap>
       </Container>
     )
   );

@@ -13,3 +13,8 @@ export const BoardContainer = styled.div`
   gap: 20px;
   flex: 1;
 `;
+
+export const ButtonWrap = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
