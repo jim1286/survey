@@ -2,6 +2,7 @@ import { BoardTypeEnum } from "@/enums";
 import {
   ChoiceContainer,
   Container,
+  InputContainer,
   OptionContainer,
   RoundCheckBox,
 } from "./styles";
@@ -12,6 +13,7 @@ import { setBoards } from "@/redux/features";
 import { nanoid } from "@reduxjs/toolkit";
 import { ChangeEvent } from "react";
 import { cloneDeep } from "lodash";
+import { IconX } from "@tabler/icons-react";
 
 interface Props {
   isClicked: boolean;
@@ -35,44 +37,60 @@ function Body({ isClicked, boardId, type, options }: Props) {
       return;
     }
 
-    const optionIndex = newBoards[boardIndex].options?.findIndex(
+    const newBoardsOptions = newBoards[boardIndex].options as BoardOption[];
+    const optionIndex = newBoardsOptions.findIndex(
       (ele) => ele.id === optionId
     );
 
-    if (optionIndex === -1 || !optionIndex) {
+    if (optionIndex === -1) {
       return;
     }
 
     const newOption: BoardOption = {
-      ...(newBoards[boardIndex].options as BoardOption[])[optionIndex],
-      value: e.target.value,
+      ...newBoardsOptions[optionIndex],
+      value: e.target.value || `옵션 ${optionIndex + 1}`,
     };
 
-    newBoards[boardIndex].options?.splice(optionIndex, 1, newOption);
+    newBoardsOptions.splice(optionIndex, 1, newOption);
+    dispatch(setBoards(newBoards));
+  };
+
+  const handelDeleteOption = (optionId: string) => {
+    const newBoards = cloneDeep(boards);
+    const boardIndex = newBoards.findIndex((ele) => ele.id === boardId);
+
+    if (boardIndex === -1) {
+      return;
+    }
+
+    const newBoardsOptions = newBoards[boardIndex].options as BoardOption[];
+    const optionIndex = newBoardsOptions.findIndex(
+      (ele) => ele.id === optionId
+    );
+
+    if (optionIndex === -1) {
+      return;
+    }
+
+    newBoardsOptions.splice(optionIndex, 1);
     dispatch(setBoards(newBoards));
   };
 
   const handleAddOption = () => {
-    const newBoards = [...boards];
+    const newBoards = cloneDeep(boards);
     const boardIndex = newBoards.findIndex((ele) => ele.id === boardId);
 
     if (boardIndex === -1 || !options) {
       return;
     }
 
+    const newBoardsOptions = newBoards[boardIndex].options as BoardOption[];
     const newOption: BoardOption = {
       id: nanoid(),
       label: type,
       value: `옵션 ${options.length + 1}`,
     };
-
-    if (!newBoards[boardIndex].options) {
-      return;
-    }
-
-    const newOptions = [
-      ...(newBoards[boardIndex].options as BoardOption[]),
-    ].concat(newOption);
+    const newOptions = newBoardsOptions.concat(newOption);
 
     newBoards[boardIndex] = { ...newBoards[boardIndex], options: newOptions };
     dispatch(setBoards(newBoards));
@@ -93,10 +111,18 @@ function Body({ isClicked, boardId, type, options }: Props) {
               <OptionContainer key={option.id}>
                 <RoundCheckBox checked={false} />
                 {isClicked ? (
-                  <Input
-                    value={option.value}
-                    onChange={(e) => handleChangeOption(e, option.id)}
-                  />
+                  <InputContainer>
+                    <Input
+                      value={option.value}
+                      onChange={(e) => handleChangeOption(e, option.id)}
+                    />
+                    {options.length !== 1 && (
+                      <IconX
+                        style={{ cursor: "pointer" }}
+                        onClick={() => handelDeleteOption(option.id)}
+                      />
+                    )}
+                  </InputContainer>
                 ) : (
                   option.value
                 )}
@@ -105,7 +131,11 @@ function Body({ isClicked, boardId, type, options }: Props) {
             {isClicked && (
               <OptionContainer>
                 <RoundCheckBox checked={false} />
-                <Input placeholder="질문 추가" onClick={handleAddOption} />
+                <Input
+                  placeholder="질문 추가"
+                  onClick={handleAddOption}
+                  value={undefined}
+                />
               </OptionContainer>
             )}
           </ChoiceContainer>
@@ -118,10 +148,18 @@ function Body({ isClicked, boardId, type, options }: Props) {
               <OptionContainer key={option.id}>
                 <Checkbox checked={false} />
                 {isClicked ? (
-                  <Input
-                    value={option.value}
-                    onChange={(e) => handleChangeOption(e, option.id)}
-                  />
+                  <InputContainer>
+                    <Input
+                      value={option.value}
+                      onChange={(e) => handleChangeOption(e, option.id)}
+                    />
+                    {options.length !== 1 && (
+                      <IconX
+                        style={{ cursor: "pointer" }}
+                        onClick={() => handelDeleteOption(option.id)}
+                      />
+                    )}
+                  </InputContainer>
                 ) : (
                   option.value
                 )}
@@ -130,7 +168,11 @@ function Body({ isClicked, boardId, type, options }: Props) {
             {isClicked && (
               <OptionContainer>
                 <Checkbox checked={false} />
-                <Input placeholder="질문 추가" onClick={handleAddOption} />
+                <Input
+                  placeholder="질문 추가"
+                  onClick={handleAddOption}
+                  value={undefined}
+                />
               </OptionContainer>
             )}
           </ChoiceContainer>
@@ -143,10 +185,18 @@ function Body({ isClicked, boardId, type, options }: Props) {
               <OptionContainer key={option.id}>
                 <div>{index + 1}</div>
                 {isClicked ? (
-                  <Input
-                    value={option.value}
-                    onChange={(e) => handleChangeOption(e, option.id)}
-                  />
+                  <InputContainer>
+                    <Input
+                      value={option.value}
+                      onChange={(e) => handleChangeOption(e, option.id)}
+                    />
+                    {options.length !== 1 && (
+                      <IconX
+                        style={{ cursor: "pointer" }}
+                        onClick={() => handelDeleteOption(option.id)}
+                      />
+                    )}
+                  </InputContainer>
                 ) : (
                   option.value
                 )}
@@ -155,7 +205,11 @@ function Body({ isClicked, boardId, type, options }: Props) {
             {isClicked && (
               <OptionContainer>
                 <div>{options && options.length + 1}</div>
-                <Input placeholder="질문 추가" onClick={handleAddOption} />
+                <Input
+                  placeholder="질문 추가"
+                  onClick={handleAddOption}
+                  value={undefined}
+                />
               </OptionContainer>
             )}
           </ChoiceContainer>

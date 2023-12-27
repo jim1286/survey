@@ -26,6 +26,13 @@ export const OptionContainer = styled.div`
   gap: 10px;
 `;
 
+export const InputContainer = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+`;
+
 export const ChoiceContainer = styled.div`
   width: 100%;
   display: flex;
