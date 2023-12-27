@@ -9,10 +9,18 @@ export interface Board {
   title?: string;
   answer?: string;
   options?: BoardOption[];
+  checkedOptionId?: string;
 }
 
 export interface BoardOption {
   id: string;
   label: string;
   value: string;
+}
+
+export interface BoardResult {
+  id: string;
+  boardId: string;
+  optionId: string;
+  answer?: string;
 }

@@ -14,7 +14,12 @@ function BoardComponent({ board }: Props) {
         {board.necessary && <Label>*</Label>}
       </TitleWrap>
       <ExplanationWrap>{board.explanationValue}</ExplanationWrap>
-      <Body type={board.type} options={board.options} />
+      <Body
+        type={board.type}
+        necessary={board.necessary}
+        boardId={board.id}
+        options={board.options}
+      />
     </Container>
   );
 }

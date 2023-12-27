@@ -22,12 +22,6 @@ export const Label = styled.div`
   color: red;
 `;
 
-export const MoveContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  cursor: move;
-`;
-
 export const Body = styled.div`
   display: flex;
   flex: 1;
