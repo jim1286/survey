@@ -1,4 +1,4 @@
-import { Container, ExplanationWrap, MoveContainer } from "./styles";
+import { Container, ExplanationWrap, MoveContainer, Spacer } from "./styles";
 import { Board, BoardOption } from "@/interfaces";
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import { setBoards, setClickedBoardId } from "@/redux/features";
@@ -102,10 +102,12 @@ function BoardComponent({ board, onDragStart, onDragEnd, onDragEnter }: Props) {
       onDragEnd={onDragEnd}
       onDragOver={(e) => e.preventDefault()}
     >
-      {enteredOptionId === board.id && (
+      {enteredOptionId === board.id ? (
         <MoveContainer draggable onDragStart={() => onDragStart(board.id)}>
           <IconSelector />
         </MoveContainer>
+      ) : (
+        <Spacer />
       )}
       <Header
         isClicked={isClicked}

@@ -121,10 +121,22 @@ function Body({
   const renderOptions = ((type, options) => {
     switch (type) {
       case BoardTypeEnum.SHORT_ANSWER: {
-        return <>1</>;
+        return (
+          <Input
+            placeholder="단답형 텍스트"
+            style={{ width: "200px" }}
+            value={""}
+          />
+        );
       }
       case BoardTypeEnum.LONG_ANSWER: {
-        return <>2</>;
+        return (
+          <Input
+            placeholder="장문형 텍스트"
+            style={{ width: "400px" }}
+            value={""}
+          />
+        );
       }
       case BoardTypeEnum.MULTIPLE_CHOICE: {
         return (

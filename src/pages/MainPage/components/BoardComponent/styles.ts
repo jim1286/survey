@@ -24,6 +24,11 @@ export const MoveContainer = styled.div`
   cursor: move;
 `;
 
+export const Spacer = styled.div`
+  width: 100%;
+  height: 24px;
+`;
+
 export const Body = styled.div<ClickedProps>`
   display: flex;
   flex: 1;
