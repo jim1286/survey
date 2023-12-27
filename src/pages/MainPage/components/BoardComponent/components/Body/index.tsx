@@ -6,16 +6,16 @@ import {
   MoveContainer,
   NumberWrap,
   OptionContainer,
-  RoundCheckBox,
 } from "./styles";
 import { BoardOption } from "@/interfaces";
-import { Checkbox, Input } from "antd";
+import { Input } from "antd";
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import { setBoards } from "@/redux/features";
 import { nanoid } from "@reduxjs/toolkit";
 import { ChangeEvent, useState } from "react";
 import { cloneDeep } from "lodash";
 import { IconSelector, IconX } from "@tabler/icons-react";
+import { ChoiceComponent } from "./components";
 
 interface Props {
   isClicked: boolean;
@@ -140,105 +140,38 @@ function Body({
       }
       case BoardTypeEnum.MULTIPLE_CHOICE: {
         return (
-          <ChoiceContainer>
-            {options?.map((option) => (
-              <OptionContainer
-                key={option.id}
-                onMouseEnter={() => handleMouseEnter(option.id)}
-                onMouseLeave={handleMouseLeave}
-                onDragEnd={onDragEnd}
-                onDragOver={(e) => e.preventDefault()}
-                onDragEnter={() => onDragEnter(option.id)}
-              >
-                {enteredOptionId === option.id && (
-                  <MoveContainer
-                    draggable
-                    onDragStart={() => onDragStart(option.id)}
-                  >
-                    <IconSelector />
-                  </MoveContainer>
-                )}
-                <RoundCheckBox checked={false} />
-                {isClicked ? (
-                  <InputContainer>
-                    <Input
-                      value={option.value}
-                      onChange={(e) => handleChangeOption(e, option.id)}
-                    />
-                    {options.length !== 1 && (
-                      <IconX
-                        style={{ cursor: "pointer" }}
-                        onClick={() => handelDeleteOption(option.id)}
-                      />
-                    )}
-                  </InputContainer>
-                ) : (
-                  option.value
-                )}
-              </OptionContainer>
-            ))}
-            {isClicked && (
-              <OptionContainer>
-                <RoundCheckBox checked={false} />
-                <Input
-                  placeholder="질문 추가"
-                  onClick={handleAddOption}
-                  value={""}
-                />
-              </OptionContainer>
-            )}
-          </ChoiceContainer>
+          <ChoiceComponent
+            type={BoardTypeEnum.MULTIPLE_CHOICE}
+            enteredOptionId={enteredOptionId}
+            options={options}
+            isClicked={isClicked}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+            onDragEnd={onDragEnd}
+            onDragEnter={onDragEnter}
+            onDragStart={onDragStart}
+            onChangeOption={handleChangeOption}
+            onDeleteOption={handelDeleteOption}
+            onAddOption={handleAddOption}
+          />
         );
       }
       case BoardTypeEnum.CHECKBOX_CHOICE: {
         return (
-          <ChoiceContainer>
-            {options?.map((option) => (
-              <OptionContainer
-                key={option.id}
-                onMouseEnter={() => handleMouseEnter(option.id)}
-                onDragEnd={onDragEnd}
-                onDragOver={(e) => e.preventDefault()}
-                onDragEnter={() => onDragEnter(option.id)}
-              >
-                {enteredOptionId === option.id && (
-                  <MoveContainer
-                    draggable
-                    onDragStart={() => onDragStart(option.id)}
-                  >
-                    <IconSelector />
-                  </MoveContainer>
-                )}
-                <Checkbox checked={false} />
-                {isClicked ? (
-                  <InputContainer>
-                    <Input
-                      value={option.value}
-                      onChange={(e) => handleChangeOption(e, option.id)}
-                    />
-                    {options.length !== 1 && (
-                      <IconX
-                        style={{ cursor: "pointer" }}
-                        onClick={() => handelDeleteOption(option.id)}
-                      />
-                    )}
-                  </InputContainer>
-                ) : (
-                  option.value
-                )}
-              </OptionContainer>
-            ))}
-            {isClicked && (
-              <OptionContainer>
-                <Checkbox checked={false} />
-                <Input
-                  placeholder="질문 추가"
-                  onClick={handleAddOption}
-                  value={""}
-                />
-              </OptionContainer>
-            )}
-          </ChoiceContainer>
+          <ChoiceComponent
+            type={BoardTypeEnum.CHECKBOX_CHOICE}
+            enteredOptionId={enteredOptionId}
+            options={options}
+            isClicked={isClicked}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+            onDragEnd={onDragEnd}
+            onDragEnter={onDragEnter}
+            onDragStart={onDragStart}
+            onChangeOption={handleChangeOption}
+            onDeleteOption={handelDeleteOption}
+            onAddOption={handleAddOption}
+          />
         );
       }
       case BoardTypeEnum.DROPDOWN_CHOICE: {

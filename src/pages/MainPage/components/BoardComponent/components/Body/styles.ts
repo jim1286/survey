@@ -1,4 +1,3 @@
-import { Checkbox } from "antd";
 import styled from "styled-components";
 
 interface ClickedProps {
@@ -11,12 +10,6 @@ export const Container = styled.div<ClickedProps>`
   display: flex;
   flex-direction: column;
   border-bottom: ${(props) => props.isClicked && "1px solid lightgrey"};
-`;
-
-export const RoundCheckBox = styled(Checkbox)`
-  .ant-checkbox-inner {
-    border-radius: 50% !important;
-  }
 `;
 
 export const OptionContainer = styled.div`

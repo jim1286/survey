@@ -12,6 +12,11 @@ function PreviewPage() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    if (boards.length !== 0) {
+      setIsLoading(false);
+      return;
+    }
+
     fetchLocalStorage();
   }, []);
 

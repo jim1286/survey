@@ -21,6 +21,6 @@ export interface BoardOption {
 export interface BoardResult {
   id: string;
   boardId: string;
-  optionId: string;
+  optionId?: string;
   answer?: string;
 }
