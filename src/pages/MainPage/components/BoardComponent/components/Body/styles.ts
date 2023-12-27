@@ -26,6 +26,10 @@ export const OptionContainer = styled.div`
   gap: 10px;
 `;
 
+export const MoveContainer = styled.div`
+  cursor: move;
+`;
+
 export const InputContainer = styled.div`
   width: 100%;
   display: flex;

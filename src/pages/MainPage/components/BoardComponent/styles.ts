@@ -18,6 +18,12 @@ export const Container = styled.div<ClickedProps>`
   gap: 5px;
 `;
 
+export const MoveContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  cursor: move;
+`;
+
 export const Body = styled.div<ClickedProps>`
   display: flex;
   flex: 1;

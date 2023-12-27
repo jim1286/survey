@@ -3,6 +3,7 @@ import {
   ChoiceContainer,
   Container,
   InputContainer,
+  MoveContainer,
   NumberWrap,
   OptionContainer,
   RoundCheckBox,
@@ -12,20 +13,32 @@ import { Checkbox, Input } from "antd";
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import { setBoards } from "@/redux/features";
 import { nanoid } from "@reduxjs/toolkit";
-import { ChangeEvent } from "react";
+import { ChangeEvent, useState } from "react";
 import { cloneDeep } from "lodash";
-import { IconX } from "@tabler/icons-react";
+import { IconSelector, IconX } from "@tabler/icons-react";
 
 interface Props {
   isClicked: boolean;
   type: BoardTypeEnum;
   boardId: string;
   options?: BoardOption[];
+  onDragStart: (optionId: string) => void;
+  onDragEnd: () => void;
+  onDragEnter: (optionId: string) => void;
 }
 
-function Body({ isClicked, boardId, type, options }: Props) {
+function Body({
+  isClicked,
+  boardId,
+  type,
+  options,
+  onDragStart,
+  onDragEnd,
+  onDragEnter,
+}: Props) {
   const dispatch = useAppDispatch();
   const boards = useAppSelector((state) => state.boardSlice.boards);
+  const [enteredOptionId, setEnteredOptionId] = useState("");
 
   const handleChangeOption = (
     e: ChangeEvent<HTMLInputElement>,
@@ -97,6 +110,14 @@ function Body({ isClicked, boardId, type, options }: Props) {
     dispatch(setBoards(newBoards));
   };
 
+  const handleMouseEnter = (optionId: string) => {
+    setEnteredOptionId(optionId);
+  };
+
+  const handleMouseLeave = () => {
+    setEnteredOptionId("");
+  };
+
   const renderOptions = ((type, options) => {
     switch (type) {
       case BoardTypeEnum.SHORT_ANSWER: {
@@ -109,7 +130,22 @@ function Body({ isClicked, boardId, type, options }: Props) {
         return (
           <ChoiceContainer>
             {options?.map((option) => (
-              <OptionContainer key={option.id}>
+              <OptionContainer
+                key={option.id}
+                onMouseEnter={() => handleMouseEnter(option.id)}
+                onMouseLeave={handleMouseLeave}
+                onDragEnd={onDragEnd}
+                onDragOver={(e) => e.preventDefault()}
+                onDragEnter={() => onDragEnter(option.id)}
+              >
+                {enteredOptionId === option.id && (
+                  <MoveContainer
+                    draggable
+                    onDragStart={() => onDragStart(option.id)}
+                  >
+                    <IconSelector />
+                  </MoveContainer>
+                )}
                 <RoundCheckBox checked={false} />
                 {isClicked ? (
                   <InputContainer>
@@ -146,7 +182,21 @@ function Body({ isClicked, boardId, type, options }: Props) {
         return (
           <ChoiceContainer>
             {options?.map((option) => (
-              <OptionContainer key={option.id}>
+              <OptionContainer
+                key={option.id}
+                onMouseEnter={() => handleMouseEnter(option.id)}
+                onDragEnd={onDragEnd}
+                onDragOver={(e) => e.preventDefault()}
+                onDragEnter={() => onDragEnter(option.id)}
+              >
+                {enteredOptionId === option.id && (
+                  <MoveContainer
+                    draggable
+                    onDragStart={() => onDragStart(option.id)}
+                  >
+                    <IconSelector />
+                  </MoveContainer>
+                )}
                 <Checkbox checked={false} />
                 {isClicked ? (
                   <InputContainer>
@@ -183,7 +233,21 @@ function Body({ isClicked, boardId, type, options }: Props) {
         return (
           <ChoiceContainer>
             {options?.map((option, index) => (
-              <OptionContainer key={option.id}>
+              <OptionContainer
+                key={option.id}
+                onMouseEnter={() => handleMouseEnter(option.id)}
+                onDragEnd={onDragEnd}
+                onDragOver={(e) => e.preventDefault()}
+                onDragEnter={() => onDragEnter(option.id)}
+              >
+                {enteredOptionId === option.id && (
+                  <MoveContainer
+                    draggable
+                    onDragStart={() => onDragStart(option.id)}
+                  >
+                    <IconSelector />
+                  </MoveContainer>
+                )}
                 <NumberWrap>{index + 1}</NumberWrap>
                 {isClicked ? (
                   <InputContainer>
