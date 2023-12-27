@@ -1,11 +1,10 @@
-import { Body, Container, Divider, Footer, Necessary } from "./styles";
+import { Container, Divider, Footer, Necessary } from "./styles";
 import { Board } from "@/interfaces";
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
-import { setBoards, setClickedBoardId } from "@/redux/features";
+import { setClickedBoardId } from "@/redux/features";
 import { Checkbox, Switch } from "antd";
 import { IconCopy, IconTrash } from "@tabler/icons-react";
-import { ChangeEvent } from "react";
-import { Header } from "./components";
+import { Body, Header } from "./components";
 
 interface Props {
   board: Board;
@@ -30,7 +29,12 @@ function BoardComponent({ board }: Props) {
         title={board.title}
         type={board.type}
       />
-      <Body isClicked={isClicked}></Body>
+      <Body
+        isClicked={isClicked}
+        boardId={board.id}
+        type={board.type}
+        options={board.options}
+      />
       {isClicked && (
         <Footer>
           <IconCopy />

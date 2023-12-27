@@ -55,6 +55,12 @@ function Toolbar() {
     const newBoard: Board = {
       id: nanoid(),
       necessary: false,
+      options: [
+        {
+          label: BoardTypeEnum.MULTIPLE_CHOICE,
+          value: "옵션 1",
+        },
+      ],
       type: BoardTypeEnum.MULTIPLE_CHOICE,
     };
 
