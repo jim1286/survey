@@ -8,7 +8,10 @@ import { clearBoardResult, setBoardResults, setBoards } from "@/redux/features";
 function PreviewPage() {
   const dispatch = useAppDispatch();
   const boards = useAppSelector((state) => state.boardSlice.boards);
+  const boardResults = useAppSelector((state) => state.boardSlice.boardResults);
+  const necessaries = boards.filter((board) => board.necessary);
   const [isLoading, setIsLoading] = useState(true);
+  const [disableSubmit, setDisableSubmit] = useState(true);
 
   useEffect(() => {
     if (boards.length !== 0) {
@@ -18,6 +21,21 @@ function PreviewPage() {
 
     fetchLocalStorage();
   }, []);
+
+  useEffect(() => {
+    let disableSubmit = false;
+
+    necessaries.forEach((necessary) => {
+      const findResult = boardResults.find(
+        (boardResult) => boardResult.boardId === necessary.id
+      );
+      if (!findResult) {
+        disableSubmit = true;
+      }
+    });
+
+    setDisableSubmit(disableSubmit);
+  }, [boardResults, necessaries]);
 
   const fetchLocalStorage = () => {
     const localBoardResults = localStorage.getItem("boardResults");
@@ -48,7 +66,7 @@ function PreviewPage() {
           ))}
         </BoardContainer>
         <ButtonWrap>
-          <Button>제출</Button>
+          <Button disabled={disableSubmit}>제출</Button>
           <Button type="text" onClick={handleClearResult}>
             양식 지우기
           </Button>
