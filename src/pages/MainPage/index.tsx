@@ -1,6 +1,5 @@
 import { BoardContainer, Container, ToolbarContainer } from "./styles";
-import { BoardComponent } from "@/components";
-import { Toolbar } from "./components";
+import { BoardComponent, Toolbar } from "./components";
 import { useAppSelector } from "@/redux/hook";
 
 function MainPage() {

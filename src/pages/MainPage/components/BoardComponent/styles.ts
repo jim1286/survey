@@ -17,13 +17,6 @@ export const Container = styled.div<ClickedProps>`
   flex-direction: column;
 `;
 
-export const Header = styled.div`
-  width: 100%;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-`;
-
 export const Body = styled.div<ClickedProps>`
   display: flex;
   flex: 1;
