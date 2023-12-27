@@ -1,5 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
-import { MainPage } from "@/pages";
+import { MainPage, PreviewPage } from "@/pages";
 import App from "@/app/App";
 
 const router = createBrowserRouter([
@@ -8,8 +8,12 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       {
-        path: "/main",
+        path: "/",
         element: <MainPage />,
+      },
+      {
+        path: "/preview",
+        element: <PreviewPage />,
       },
     ],
   },

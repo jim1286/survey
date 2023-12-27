@@ -59,10 +59,27 @@ const useBoard = () => {
         break;
       }
       case "type": {
+        const type = value as BoardTypeEnum;
         newBoards[boardIndex] = {
           ...newBoards[boardIndex],
-          type: value as BoardTypeEnum,
+          type,
         };
+
+        if (
+          type === BoardTypeEnum.SHORT_ANSWER ||
+          type === BoardTypeEnum.LONG_ANSWER
+        ) {
+          newBoards[boardIndex] = {
+            ...newBoards[boardIndex],
+            options: [
+              {
+                id: nanoid(),
+                label: BoardTypeEnum.MULTIPLE_CHOICE,
+                value: "옵션 1",
+              },
+            ],
+          };
+        }
 
         break;
       }

@@ -3,6 +3,7 @@ import styled from "styled-components";
 export const Container = styled.div`
   padding: 20px;
   display: flex;
+  flex-direction: column;
   gap: 10px;
 `;
 
@@ -11,9 +12,4 @@ export const BoardContainer = styled.div`
   flex-direction: column;
   gap: 20px;
   flex: 1;
-`;
-
-export const ToolbarContainer = styled.div`
-  height: 100%;
-  position: relative;
 `;

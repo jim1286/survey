@@ -3,9 +3,12 @@ import { BoardComponent, Toolbar } from "./components";
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import { useRef } from "react";
 import { setBoards } from "@/redux/features";
+import { IconEye } from "@tabler/icons-react";
+import { useNavigate } from "react-router-dom";
 
 function MainPage() {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const dragItem = useRef<string>("");
   const dragOverItem = useRef<string>("");
   const boards = useAppSelector((state) => state.boardSlice.boards);
@@ -40,8 +43,13 @@ function MainPage() {
     dragOverItem.current = boardId;
   };
 
+  const handleClickPreview = () => {
+    navigate("/preview");
+  };
+
   return (
     <Container>
+      <IconEye style={{ cursor: "pointer" }} onClick={handleClickPreview} />
       <BoardContainer>
         {boards.map((board) => (
           <BoardComponent

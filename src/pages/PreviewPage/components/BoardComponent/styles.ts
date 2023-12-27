@@ -1,20 +1,25 @@
 import styled from "styled-components";
 
-interface ClickedProps {
-  isClicked: boolean;
-}
-
-export const Container = styled.div<ClickedProps>`
+export const Container = styled.div`
   width: 600px;
   min-height: 150px;
   padding: 20px;
   border: 1px solid gray;
-  border-left: ${(props) => props.isClicked && "5px solid skyblue"};
   border-radius: 8px;
   background-color: white;
   display: flex;
   flex-direction: column;
   gap: 5px;
+`;
+
+export const TitleWrap = styled.div`
+  display: flex;
+  gap: 5px;
+  width: 100%;
+`;
+
+export const Label = styled.div`
+  color: red;
 `;
 
 export const MoveContainer = styled.div`
@@ -23,15 +28,9 @@ export const MoveContainer = styled.div`
   cursor: move;
 `;
 
-export const Spacer = styled.div`
-  width: 100%;
-  height: 24px;
-`;
-
-export const Body = styled.div<ClickedProps>`
+export const Body = styled.div`
   display: flex;
   flex: 1;
-  border-bottom: ${(props) => props.isClicked && "1px solid gray"};
 `;
 
 export const ExplanationWrap = styled.div`
