@@ -1,28 +1,32 @@
 import { BoardTypeEnum } from "@/enums";
-import { Board } from "@/interfaces";
+import { Board, BoardOption } from "@/interfaces";
+import { nanoid } from "@reduxjs/toolkit";
+import { cloneDeep } from "lodash";
 
-type KeyType =
+type ActionType =
   | "necessary"
   | "explanation"
   | "title"
   | "type"
-  | "explanationValue";
+  | "explanationValue"
+  | "copy"
+  | "delete";
 
 const useBoard = () => {
   const getNewBoards = (
-    key: KeyType,
+    action: ActionType,
     boards: Board[],
     boardId: string,
-    value: string | boolean | BoardTypeEnum
+    value?: string | boolean | BoardTypeEnum
   ) => {
-    const newBoards = [...boards];
+    const newBoards = cloneDeep(boards);
     const boardIndex = newBoards.findIndex((ele) => ele.id === boardId);
 
     if (boardIndex === -1) {
       return;
     }
 
-    switch (key) {
+    switch (action) {
       case "necessary": {
         newBoards[boardIndex] = {
           ...newBoards[boardIndex],
@@ -60,6 +64,31 @@ const useBoard = () => {
           type: value as BoardTypeEnum,
         };
 
+        break;
+      }
+      case "copy": {
+        const newBoardsOptions = [
+          ...(newBoards[boardIndex].options as BoardOption[]),
+        ];
+
+        newBoardsOptions.forEach((option, index) => {
+          newBoardsOptions[index] = {
+            ...option,
+            id: nanoid(),
+          };
+        });
+
+        const newBoard = {
+          ...newBoards[boardIndex],
+          options: newBoardsOptions,
+          id: nanoid(),
+        };
+
+        newBoards.splice(boardIndex, 0, newBoard);
+        break;
+      }
+      case "delete": {
+        newBoards.splice(boardIndex, 1);
         break;
       }
       case "explanationValue": {

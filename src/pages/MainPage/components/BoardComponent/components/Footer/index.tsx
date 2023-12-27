@@ -36,10 +36,30 @@ function Footer({ necessary, explanation, boardId }: Props) {
     dispatch(setBoards(newBoards));
   };
 
+  const handleCopy = () => {
+    const newBoards = getNewBoards("copy", boards, boardId);
+
+    if (!newBoards) {
+      return;
+    }
+
+    dispatch(setBoards(newBoards));
+  };
+
+  const handleDelete = () => {
+    const newBoards = getNewBoards("delete", boards, boardId);
+
+    if (!newBoards) {
+      return;
+    }
+
+    dispatch(setBoards(newBoards));
+  };
+
   return (
     <Container>
-      <IconCopy />
-      <IconTrash />
+      <IconCopy style={{ cursor: "pointer" }} onClick={handleCopy} />
+      <IconTrash style={{ cursor: "pointer" }} onClick={handleDelete} />
       <Divider />
       <SwitchContainer>
         필수
