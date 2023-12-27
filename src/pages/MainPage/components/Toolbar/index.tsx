@@ -55,6 +55,7 @@ function Toolbar() {
     const newBoard: Board = {
       id: nanoid(),
       necessary: false,
+      explanation: false,
       options: [
         {
           id: nanoid(),

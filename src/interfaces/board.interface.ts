@@ -2,10 +2,12 @@ import { BoardTypeEnum } from "@/enums";
 
 export interface Board {
   id: string;
-  title?: string;
   type: BoardTypeEnum;
-  answer?: string;
   necessary: boolean;
+  explanation: boolean;
+  explanationValue?: string;
+  title?: string;
+  answer?: string;
   options?: BoardOption[];
 }
 

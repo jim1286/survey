@@ -3,6 +3,7 @@ import {
   ChoiceContainer,
   Container,
   InputContainer,
+  NumberWrap,
   OptionContainer,
   RoundCheckBox,
 } from "./styles";
@@ -134,7 +135,7 @@ function Body({ isClicked, boardId, type, options }: Props) {
                 <Input
                   placeholder="질문 추가"
                   onClick={handleAddOption}
-                  value={undefined}
+                  value={""}
                 />
               </OptionContainer>
             )}
@@ -171,7 +172,7 @@ function Body({ isClicked, boardId, type, options }: Props) {
                 <Input
                   placeholder="질문 추가"
                   onClick={handleAddOption}
-                  value={undefined}
+                  value={""}
                 />
               </OptionContainer>
             )}
@@ -183,7 +184,7 @@ function Body({ isClicked, boardId, type, options }: Props) {
           <ChoiceContainer>
             {options?.map((option, index) => (
               <OptionContainer key={option.id}>
-                <div>{index + 1}</div>
+                <NumberWrap>{index + 1}</NumberWrap>
                 {isClicked ? (
                   <InputContainer>
                     <Input
@@ -204,11 +205,11 @@ function Body({ isClicked, boardId, type, options }: Props) {
             ))}
             {isClicked && (
               <OptionContainer>
-                <div>{options && options.length + 1}</div>
+                <NumberWrap>{options && options.length + 1}</NumberWrap>
                 <Input
                   placeholder="질문 추가"
                   onClick={handleAddOption}
-                  value={undefined}
+                  value={""}
                 />
               </OptionContainer>
             )}

@@ -6,3 +6,7 @@ export const Container = styled.div`
   align-items: center;
   gap: 5px;
 `;
+
+export const TitleWrap = styled.div`
+  width: 100%;
+`;

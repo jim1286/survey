@@ -1,9 +1,10 @@
 import { BoardTypeEnum } from "@/enums";
 import { ChangeEvent } from "react";
-import { Container } from "./styles";
+import { Container, TitleWrap } from "./styles";
 import { Input, Select } from "antd";
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import { setBoards } from "@/redux/features";
+import { useBoard } from "@/hooks";
 
 interface Props {
   isClicked: boolean;
@@ -14,42 +15,11 @@ interface Props {
 
 function Header({ isClicked, boardId, type, title }: Props) {
   const dispatch = useAppDispatch();
+  const { getNewBoards } = useBoard();
   const boards = useAppSelector((state) => state.boardSlice.boards);
 
-  const getNewBoards = (
-    changType: "title" | "type",
-    value: string | BoardTypeEnum
-  ) => {
-    const newBoards = [...boards];
-    const boardIndex = newBoards.findIndex((ele) => ele.id === boardId);
-
-    if (boardIndex === -1) {
-      return;
-    }
-
-    switch (changType) {
-      case "title": {
-        newBoards[boardIndex] = {
-          ...newBoards[boardIndex],
-          title: value as string,
-        };
-
-        break;
-      }
-      case "type": {
-        newBoards[boardIndex] = {
-          ...newBoards[boardIndex],
-          type: value as BoardTypeEnum,
-        };
-
-        break;
-      }
-    }
-    return newBoards;
-  };
-
   const handleChangeTitle = (e: ChangeEvent<HTMLInputElement>) => {
-    const newBoards = getNewBoards("title", e.target.value);
+    const newBoards = getNewBoards("title", boards, boardId, e.target.value);
 
     if (!newBoards) {
       return;
@@ -59,7 +29,7 @@ function Header({ isClicked, boardId, type, title }: Props) {
   };
 
   const handleChangeType = (value: BoardTypeEnum) => {
-    const newBoards = getNewBoards("type", value);
+    const newBoards = getNewBoards("type", boards, boardId, value);
 
     if (!newBoards) {
       return;
@@ -103,8 +73,10 @@ function Header({ isClicked, boardId, type, title }: Props) {
         ]}
       />
     </Container>
+  ) : title ? (
+    <TitleWrap>{title}</TitleWrap>
   ) : (
-    title || "질문"
+    <TitleWrap>질문</TitleWrap>
   );
 }
 

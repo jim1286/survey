@@ -10,7 +10,7 @@ export const Container = styled.div<ClickedProps>`
   padding: 30px 0px;
   display: flex;
   flex-direction: column;
-  border-bottom: ${(props) => props.isClicked && "1px solid gray"};
+  border-bottom: ${(props) => props.isClicked && "1px solid lightgrey"};
 `;
 
 export const RoundCheckBox = styled(Checkbox)`
@@ -31,6 +31,10 @@ export const InputContainer = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
+`;
+
+export const NumberWrap = styled.div`
+  width: 17px;
 `;
 
 export const ChoiceContainer = styled.div`

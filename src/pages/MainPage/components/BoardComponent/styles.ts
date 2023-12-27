@@ -15,6 +15,7 @@ export const Container = styled.div<ClickedProps>`
   background-color: white;
   display: flex;
   flex-direction: column;
+  gap: 5px;
 `;
 
 export const Body = styled.div<ClickedProps>`
@@ -23,23 +24,6 @@ export const Body = styled.div<ClickedProps>`
   border-bottom: ${(props) => props.isClicked && "1px solid gray"};
 `;
 
-export const Footer = styled.div`
+export const ExplanationWrap = styled.div`
   width: 100%;
-  height: 50px;
-  padding: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: end;
-  gap: 20px;
-`;
-
-export const Necessary = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 5px;
-`;
-
-export const Divider = styled.div`
-  height: 100%;
-  border-right: 1px solid gray;
 `;
