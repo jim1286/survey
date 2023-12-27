@@ -7,7 +7,7 @@ interface ClickedProps {
 export const Container = styled.div<ClickedProps>`
   min-width: 600px;
   width: 100%;
-  min-height: 300px;
+  min-height: 150px;
   padding: 20px;
   border: 1px solid gray;
   border-left: ${(props) => props.isClicked && "5px solid skyblue"};

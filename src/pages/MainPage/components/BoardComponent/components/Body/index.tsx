@@ -10,6 +10,8 @@ import { Checkbox, Input } from "antd";
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import { setBoards } from "@/redux/features";
 import { nanoid } from "@reduxjs/toolkit";
+import { ChangeEvent } from "react";
+import { cloneDeep } from "lodash";
 
 interface Props {
   isClicked: boolean;
@@ -22,6 +24,34 @@ function Body({ isClicked, boardId, type, options }: Props) {
   const dispatch = useAppDispatch();
   const boards = useAppSelector((state) => state.boardSlice.boards);
 
+  const handleChangeOption = (
+    e: ChangeEvent<HTMLInputElement>,
+    optionId: string
+  ) => {
+    const newBoards = cloneDeep(boards);
+    const boardIndex = newBoards.findIndex((ele) => ele.id === boardId);
+
+    if (boardIndex === -1) {
+      return;
+    }
+
+    const optionIndex = newBoards[boardIndex].options?.findIndex(
+      (ele) => ele.id === optionId
+    );
+
+    if (optionIndex === -1 || !optionIndex) {
+      return;
+    }
+
+    const newOption: BoardOption = {
+      ...(newBoards[boardIndex].options as BoardOption[])[optionIndex],
+      value: e.target.value,
+    };
+
+    newBoards[boardIndex].options?.splice(optionIndex, 1, newOption);
+    dispatch(setBoards(newBoards));
+  };
+
   const handleAddOption = () => {
     const newBoards = [...boards];
     const boardIndex = newBoards.findIndex((ele) => ele.id === boardId);
@@ -31,6 +61,7 @@ function Body({ isClicked, boardId, type, options }: Props) {
     }
 
     const newOption: BoardOption = {
+      id: nanoid(),
       label: type,
       value: `옵션 ${options.length + 1}`,
     };
@@ -59,9 +90,16 @@ function Body({ isClicked, boardId, type, options }: Props) {
         return (
           <ChoiceContainer>
             {options?.map((option) => (
-              <OptionContainer key={nanoid()}>
+              <OptionContainer key={option.id}>
                 <RoundCheckBox checked={false} />
-                {isClicked ? <Input value={option.value} /> : option.value}
+                {isClicked ? (
+                  <Input
+                    value={option.value}
+                    onChange={(e) => handleChangeOption(e, option.id)}
+                  />
+                ) : (
+                  option.value
+                )}
               </OptionContainer>
             ))}
             {isClicked && (
@@ -77,9 +115,16 @@ function Body({ isClicked, boardId, type, options }: Props) {
         return (
           <ChoiceContainer>
             {options?.map((option) => (
-              <OptionContainer key={nanoid()}>
+              <OptionContainer key={option.id}>
                 <Checkbox checked={false} />
-                {isClicked ? <Input value={option.value} /> : option.value}
+                {isClicked ? (
+                  <Input
+                    value={option.value}
+                    onChange={(e) => handleChangeOption(e, option.id)}
+                  />
+                ) : (
+                  option.value
+                )}
               </OptionContainer>
             ))}
             {isClicked && (
@@ -95,9 +140,16 @@ function Body({ isClicked, boardId, type, options }: Props) {
         return (
           <ChoiceContainer>
             {options?.map((option, index) => (
-              <OptionContainer key={nanoid()}>
+              <OptionContainer key={option.id}>
                 <div>{index + 1}</div>
-                {isClicked ? <Input value={option.value} /> : option.value}
+                {isClicked ? (
+                  <Input
+                    value={option.value}
+                    onChange={(e) => handleChangeOption(e, option.id)}
+                  />
+                ) : (
+                  option.value
+                )}
               </OptionContainer>
             ))}
             {isClicked && (
