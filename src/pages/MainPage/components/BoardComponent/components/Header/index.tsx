@@ -19,7 +19,13 @@ function Header({ isClicked, boardId, type, title }: Props) {
   const boards = useAppSelector((state) => state.boardSlice.boards);
 
   const handleChangeTitle = (e: ChangeEvent<HTMLInputElement>) => {
-    const newBoards = getNewBoards("title", boards, boardId, e.target.value);
+    const newBoards = getNewBoards(
+      "changeTitle",
+      boards,
+      boardId,
+      undefined,
+      e.target.value
+    );
 
     if (!newBoards) {
       return;
@@ -29,7 +35,13 @@ function Header({ isClicked, boardId, type, title }: Props) {
   };
 
   const handleChangeType = (value: BoardTypeEnum) => {
-    const newBoards = getNewBoards("type", boards, boardId, value);
+    const newBoards = getNewBoards(
+      "changeType",
+      boards,
+      boardId,
+      undefined,
+      value
+    );
 
     if (!newBoards) {
       return;
@@ -48,7 +60,7 @@ function Header({ isClicked, boardId, type, title }: Props) {
       />
       <Select
         defaultValue={type}
-        style={{ width: "150px" }}
+        style={{ width: "180px" }}
         size="large"
         onChange={handleChangeType}
         options={[

@@ -4,19 +4,23 @@ import { nanoid } from "@reduxjs/toolkit";
 import { cloneDeep } from "lodash";
 
 type ActionType =
-  | "necessary"
-  | "explanation"
-  | "title"
-  | "type"
-  | "explanationValue"
-  | "copy"
-  | "delete";
+  | "switchNecessary"
+  | "switchExplanation"
+  | "changeTitle"
+  | "changeType"
+  | "changeExplanation"
+  | "copyBoard"
+  | "deleteBoard"
+  | "addOption"
+  | "deleteOption"
+  | "changeOption";
 
 const useBoard = () => {
   const getNewBoards = (
     action: ActionType,
     boards: Board[],
     boardId: string,
+    optionId?: string,
     value?: string | boolean | BoardTypeEnum
   ) => {
     const newBoards = cloneDeep(boards);
@@ -27,7 +31,52 @@ const useBoard = () => {
     }
 
     switch (action) {
-      case "necessary": {
+      case "addOption": {
+        const newBoardsOptions = newBoards[boardIndex].options as BoardOption[];
+        const newOption: BoardOption = {
+          id: nanoid(),
+          value: `옵션 ${newBoardsOptions.length + 1}`,
+        };
+        const newOptions = newBoardsOptions.concat(newOption);
+
+        newBoards[boardIndex] = {
+          ...newBoards[boardIndex],
+          options: newOptions,
+        };
+        break;
+      }
+      case "deleteOption": {
+        const newBoardsOptions = newBoards[boardIndex].options as BoardOption[];
+        const optionIndex = newBoardsOptions.findIndex(
+          (ele) => ele.id === optionId
+        );
+
+        if (optionIndex === -1) {
+          return;
+        }
+
+        newBoardsOptions.splice(optionIndex, 1);
+        break;
+      }
+      case "changeOption": {
+        const newBoardsOptions = newBoards[boardIndex].options as BoardOption[];
+        const optionIndex = newBoardsOptions.findIndex(
+          (ele) => ele.id === optionId
+        );
+
+        if (optionIndex === -1) {
+          return;
+        }
+
+        const newOption: BoardOption = {
+          ...newBoardsOptions[optionIndex],
+          value: (value as string) || `옵션 ${optionIndex + 1}`,
+        };
+
+        newBoardsOptions.splice(optionIndex, 1, newOption);
+        break;
+      }
+      case "switchNecessary": {
         newBoards[boardIndex] = {
           ...newBoards[boardIndex],
           necessary: !value,
@@ -35,7 +84,7 @@ const useBoard = () => {
 
         break;
       }
-      case "explanation": {
+      case "switchExplanation": {
         newBoards[boardIndex] = {
           ...newBoards[boardIndex],
           explanation: !value,
@@ -50,7 +99,7 @@ const useBoard = () => {
 
         break;
       }
-      case "title": {
+      case "changeTitle": {
         newBoards[boardIndex] = {
           ...newBoards[boardIndex],
           title: value as string,
@@ -58,7 +107,7 @@ const useBoard = () => {
 
         break;
       }
-      case "type": {
+      case "changeType": {
         const type = value as BoardTypeEnum;
         newBoards[boardIndex] = {
           ...newBoards[boardIndex],
@@ -74,7 +123,6 @@ const useBoard = () => {
             options: [
               {
                 id: nanoid(),
-                label: BoardTypeEnum.MULTIPLE_CHOICE,
                 value: "옵션 1",
               },
             ],
@@ -83,7 +131,7 @@ const useBoard = () => {
 
         break;
       }
-      case "copy": {
+      case "copyBoard": {
         const newBoardsOptions = [
           ...(newBoards[boardIndex].options as BoardOption[]),
         ];
@@ -104,11 +152,11 @@ const useBoard = () => {
         newBoards.splice(boardIndex, 0, newBoard);
         break;
       }
-      case "delete": {
+      case "deleteBoard": {
         newBoards.splice(boardIndex, 1);
         break;
       }
-      case "explanationValue": {
+      case "changeExplanation": {
         newBoards[boardIndex] = {
           ...newBoards[boardIndex],
           explanationValue: value as string,

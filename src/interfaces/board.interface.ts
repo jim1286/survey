@@ -14,7 +14,6 @@ export interface Board {
 
 export interface BoardOption {
   id: string;
-  label: string;
   value: string;
 }
 

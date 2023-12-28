@@ -17,7 +17,13 @@ function Footer({ necessary, explanation, boardId }: Props) {
   const boards = useAppSelector((state) => state.boardSlice.boards);
 
   const handleSwitchNecessary = () => {
-    const newBoards = getNewBoards("necessary", boards, boardId, necessary);
+    const newBoards = getNewBoards(
+      "switchNecessary",
+      boards,
+      boardId,
+      undefined,
+      necessary
+    );
 
     if (!newBoards) {
       return;
@@ -27,7 +33,13 @@ function Footer({ necessary, explanation, boardId }: Props) {
   };
 
   const handleSwitchExplanation = () => {
-    const newBoards = getNewBoards("explanation", boards, boardId, explanation);
+    const newBoards = getNewBoards(
+      "switchExplanation",
+      boards,
+      boardId,
+      undefined,
+      explanation
+    );
 
     if (!newBoards) {
       return;
@@ -37,7 +49,7 @@ function Footer({ necessary, explanation, boardId }: Props) {
   };
 
   const handleCopy = () => {
-    const newBoards = getNewBoards("copy", boards, boardId);
+    const newBoards = getNewBoards("copyBoard", boards, boardId);
 
     if (!newBoards) {
       return;
@@ -47,7 +59,7 @@ function Footer({ necessary, explanation, boardId }: Props) {
   };
 
   const handleDelete = () => {
-    const newBoards = getNewBoards("delete", boards, boardId);
+    const newBoards = getNewBoards("deleteBoard", boards, boardId);
 
     if (!newBoards) {
       return;

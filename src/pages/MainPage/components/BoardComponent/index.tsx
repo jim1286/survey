@@ -34,9 +34,10 @@ function BoardComponent({ board, onDragStart, onDragEnd, onDragEnter }: Props) {
 
   const handleChangeExplanation = (e: ChangeEvent<HTMLInputElement>) => {
     const newBoards = getNewBoards(
-      "explanationValue",
+      "changeExplanation",
       boards,
       board.id,
+      undefined,
       e.target.value
     );
 
@@ -102,7 +103,7 @@ function BoardComponent({ board, onDragStart, onDragEnd, onDragEnter }: Props) {
       onDragEnd={onDragEnd}
       onDragOver={(e) => e.preventDefault()}
     >
-      {enteredOptionId === board.id ? (
+      {enteredOptionId === board.id && isClicked ? (
         <MoveContainer draggable onDragStart={() => onDragStart(board.id)}>
           <IconSelector />
         </MoveContainer>

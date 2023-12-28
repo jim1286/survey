@@ -1,11 +1,12 @@
 import { IconSelector, IconX } from "@tabler/icons-react";
-import { Input } from "antd";
+import { Checkbox, Input } from "antd";
 import {
   Container,
   InputContainer,
   MoveContainer,
+  NumberWrap,
   OptionContainer,
-  TypeCheckbox,
+  RoundedCheckbox,
 } from "./styles";
 import { BoardOption } from "@/interfaces";
 import { ChangeEvent } from "react";
@@ -14,6 +15,7 @@ import { BoardTypeEnum } from "@/enums";
 interface Props {
   type: BoardTypeEnum;
   enteredOptionId: string;
+  index?: number;
   options?: BoardOption[];
   isClicked: boolean;
   onMouseEnter: (optionId: string) => void;
@@ -42,7 +44,7 @@ function ChoiceComponent({
 }: Props) {
   return (
     <Container>
-      {options?.map((option) => (
+      {options?.map((option, index) => (
         <OptionContainer
           key={option.id}
           onMouseEnter={() => onMouseEnter(option.id)}
@@ -51,15 +53,18 @@ function ChoiceComponent({
           onDragOver={(e) => e.preventDefault()}
           onDragEnter={() => onDragEnter(option.id)}
         >
-          {enteredOptionId === option.id && (
+          {enteredOptionId === option.id && isClicked && (
             <MoveContainer draggable onDragStart={() => onDragStart(option.id)}>
               <IconSelector />
             </MoveContainer>
           )}
-          <TypeCheckbox
-            rounded={type === BoardTypeEnum.MULTIPLE_CHOICE}
-            checked={false}
-          />
+          {type === BoardTypeEnum.CHECKBOX_CHOICE ? (
+            <Checkbox checked={false} />
+          ) : type === BoardTypeEnum.MULTIPLE_CHOICE ? (
+            <RoundedCheckbox checked={false} />
+          ) : (
+            <NumberWrap>{index + 1}</NumberWrap>
+          )}
           {isClicked ? (
             <InputContainer>
               <Input
@@ -80,10 +85,13 @@ function ChoiceComponent({
       ))}
       {isClicked && (
         <OptionContainer>
-          <TypeCheckbox
-            rounded={type === BoardTypeEnum.MULTIPLE_CHOICE}
-            checked={false}
-          />
+          {type === BoardTypeEnum.CHECKBOX_CHOICE ? (
+            <Checkbox checked={false} />
+          ) : type === BoardTypeEnum.MULTIPLE_CHOICE ? (
+            <RoundedCheckbox checked={false} />
+          ) : (
+            <NumberWrap>{options && options.length + 1}</NumberWrap>
+          )}
           <Input placeholder="질문 추가" onClick={onAddOption} value={""} />
         </OptionContainer>
       )}

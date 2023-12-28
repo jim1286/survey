@@ -1,21 +1,12 @@
 import { BoardTypeEnum } from "@/enums";
-import {
-  ChoiceContainer,
-  Container,
-  InputContainer,
-  MoveContainer,
-  NumberWrap,
-  OptionContainer,
-} from "./styles";
+import { Container } from "./styles";
 import { BoardOption } from "@/interfaces";
 import { Input } from "antd";
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import { setBoards } from "@/redux/features";
-import { nanoid } from "@reduxjs/toolkit";
 import { ChangeEvent, useState } from "react";
-import { cloneDeep } from "lodash";
-import { IconSelector, IconX } from "@tabler/icons-react";
 import { ChoiceComponent } from "./components";
+import { useBoard } from "@/hooks";
 
 interface Props {
   isClicked: boolean;
@@ -37,6 +28,7 @@ function Body({
   onDragEnter,
 }: Props) {
   const dispatch = useAppDispatch();
+  const { getNewBoards } = useBoard();
   const boards = useAppSelector((state) => state.boardSlice.boards);
   const [enteredOptionId, setEnteredOptionId] = useState("");
 
@@ -44,69 +36,38 @@ function Body({
     e: ChangeEvent<HTMLInputElement>,
     optionId: string
   ) => {
-    const newBoards = cloneDeep(boards);
-    const boardIndex = newBoards.findIndex((ele) => ele.id === boardId);
-
-    if (boardIndex === -1) {
-      return;
-    }
-
-    const newBoardsOptions = newBoards[boardIndex].options as BoardOption[];
-    const optionIndex = newBoardsOptions.findIndex(
-      (ele) => ele.id === optionId
+    const newBoards = getNewBoards(
+      "changeOption",
+      boards,
+      boardId,
+      optionId,
+      e.target.value
     );
 
-    if (optionIndex === -1) {
+    if (!newBoards) {
       return;
     }
 
-    const newOption: BoardOption = {
-      ...newBoardsOptions[optionIndex],
-      value: e.target.value || `옵션 ${optionIndex + 1}`,
-    };
-
-    newBoardsOptions.splice(optionIndex, 1, newOption);
     dispatch(setBoards(newBoards));
   };
 
   const handelDeleteOption = (optionId: string) => {
-    const newBoards = cloneDeep(boards);
-    const boardIndex = newBoards.findIndex((ele) => ele.id === boardId);
+    const newBoards = getNewBoards("deleteOption", boards, boardId, optionId);
 
-    if (boardIndex === -1) {
+    if (!newBoards) {
       return;
     }
 
-    const newBoardsOptions = newBoards[boardIndex].options as BoardOption[];
-    const optionIndex = newBoardsOptions.findIndex(
-      (ele) => ele.id === optionId
-    );
-
-    if (optionIndex === -1) {
-      return;
-    }
-
-    newBoardsOptions.splice(optionIndex, 1);
     dispatch(setBoards(newBoards));
   };
 
   const handleAddOption = () => {
-    const newBoards = cloneDeep(boards);
-    const boardIndex = newBoards.findIndex((ele) => ele.id === boardId);
+    const newBoards = getNewBoards("addOption", boards, boardId);
 
-    if (boardIndex === -1 || !options) {
+    if (!newBoards) {
       return;
     }
 
-    const newBoardsOptions = newBoards[boardIndex].options as BoardOption[];
-    const newOption: BoardOption = {
-      id: nanoid(),
-      label: type,
-      value: `옵션 ${options.length + 1}`,
-    };
-    const newOptions = newBoardsOptions.concat(newOption);
-
-    newBoards[boardIndex] = { ...newBoards[boardIndex], options: newOptions };
     dispatch(setBoards(newBoards));
   };
 
@@ -176,53 +137,20 @@ function Body({
       }
       case BoardTypeEnum.DROPDOWN_CHOICE: {
         return (
-          <ChoiceContainer>
-            {options?.map((option, index) => (
-              <OptionContainer
-                key={option.id}
-                onMouseEnter={() => handleMouseEnter(option.id)}
-                onDragEnd={onDragEnd}
-                onDragOver={(e) => e.preventDefault()}
-                onDragEnter={() => onDragEnter(option.id)}
-              >
-                {enteredOptionId === option.id && (
-                  <MoveContainer
-                    draggable
-                    onDragStart={() => onDragStart(option.id)}
-                  >
-                    <IconSelector />
-                  </MoveContainer>
-                )}
-                <NumberWrap>{index + 1}</NumberWrap>
-                {isClicked ? (
-                  <InputContainer>
-                    <Input
-                      value={option.value}
-                      onChange={(e) => handleChangeOption(e, option.id)}
-                    />
-                    {options.length !== 1 && (
-                      <IconX
-                        style={{ cursor: "pointer" }}
-                        onClick={() => handelDeleteOption(option.id)}
-                      />
-                    )}
-                  </InputContainer>
-                ) : (
-                  option.value
-                )}
-              </OptionContainer>
-            ))}
-            {isClicked && (
-              <OptionContainer>
-                <NumberWrap>{options && options.length + 1}</NumberWrap>
-                <Input
-                  placeholder="질문 추가"
-                  onClick={handleAddOption}
-                  value={""}
-                />
-              </OptionContainer>
-            )}
-          </ChoiceContainer>
+          <ChoiceComponent
+            type={BoardTypeEnum.DROPDOWN_CHOICE}
+            enteredOptionId={enteredOptionId}
+            options={options}
+            isClicked={isClicked}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+            onDragEnd={onDragEnd}
+            onDragEnter={onDragEnter}
+            onDragStart={onDragStart}
+            onChangeOption={handleChangeOption}
+            onDeleteOption={handelDeleteOption}
+            onAddOption={handleAddOption}
+          />
         );
       }
     }

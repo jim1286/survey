@@ -22,7 +22,6 @@ function Toolbar() {
       options: [
         {
           id: nanoid(),
-          label: BoardTypeEnum.MULTIPLE_CHOICE,
           value: "옵션 1",
         },
       ],

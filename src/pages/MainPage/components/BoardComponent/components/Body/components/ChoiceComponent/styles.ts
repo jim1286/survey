@@ -1,10 +1,6 @@
 import { Checkbox } from "antd";
 import styled from "styled-components";
 
-interface TypeProps {
-  rounded: boolean;
-}
-
 export const Container = styled.div`
   width: 100%;
   display: flex;
@@ -34,8 +30,12 @@ export const InputContainer = styled.div`
   gap: 10px;
 `;
 
-export const TypeCheckbox = styled(Checkbox)<TypeProps>`
+export const RoundedCheckbox = styled(Checkbox)`
   .ant-checkbox-inner {
-    border-radius: ${(props) => props.rounded && "50% !important"};
+    border-radius: 50% !important;
   }
+`;
+
+export const NumberWrap = styled.div`
+  width: 17px;
 `;
