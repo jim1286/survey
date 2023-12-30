@@ -4,9 +4,9 @@ import { BoardOption } from "@/interfaces";
 import { Input, Select } from "antd";
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import { setBoardResults } from "@/redux/features";
-import { nanoid } from "@reduxjs/toolkit";
 import { ChangeEvent, useEffect } from "react";
 import { ChoiceComponent, ClearButton } from "./components";
+import { useBoard } from "@/hooks";
 
 interface Props {
   type: BoardTypeEnum;
@@ -19,6 +19,7 @@ function Body({ type, boardId, necessary, options }: Props) {
   const dispatch = useAppDispatch();
   const boards = useAppSelector((state) => state.boardSlice.boards);
   const boardResults = useAppSelector((state) => state.boardSlice.boardResults);
+  const { getNewBoardsResult } = useBoard();
 
   useEffect(() => {
     const debounceTimer = setTimeout(() => {
@@ -32,60 +33,47 @@ function Body({ type, boardId, necessary, options }: Props) {
   }, [boardResults]);
 
   const handleOption = (optionId: string) => {
-    const newBoardResults = [...boardResults];
-    const boardResultIndex = boardResults.findIndex(
-      (boardResult) => boardResult.boardId === boardId
+    const newBoardResults = getNewBoardsResult(
+      "changeOption",
+      boardResults,
+      boardId,
+      optionId
     );
 
-    if (boardResultIndex === -1) {
-      const newResult = { id: nanoid(), boardId, optionId };
-      dispatch(setBoardResults(newBoardResults.concat(newResult)));
+    if (!newBoardResults) {
       return;
     }
 
-    if (boardResults[boardResultIndex].optionId === optionId) {
-      newBoardResults.splice(boardResultIndex, 1);
-      dispatch(setBoardResults(newBoardResults));
-      return;
-    }
-
-    const newResult = { id: nanoid(), boardId, optionId };
-    newBoardResults[boardResultIndex] = newResult;
     dispatch(setBoardResults(newBoardResults));
   };
 
   const handleClearOption = () => {
-    const newBoardResults = [...boardResults];
-    const boardResultIndex = boardResults.findIndex(
-      (boardResult) => boardResult.boardId === boardId
+    const newBoardResults = getNewBoardsResult(
+      "clearOption",
+      boardResults,
+      boardId
     );
-    newBoardResults.splice(boardResultIndex, 1);
+
+    if (!newBoardResults) {
+      return;
+    }
+
     dispatch(setBoardResults(newBoardResults));
   };
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const newBoardResults = [...boardResults];
-    const boardResultIndex = boardResults.findIndex(
-      (boardResult) => boardResult.boardId === boardId
-    );
-    const newResult = {
-      id: nanoid(),
+    const newBoardResults = getNewBoardsResult(
+      "inputChange",
+      boardResults,
       boardId,
-      answer: e.target.value,
-    };
+      undefined,
+      e.target.value
+    );
 
-    if (boardResultIndex === -1) {
-      dispatch(setBoardResults(newBoardResults.concat(newResult)));
+    if (!newBoardResults) {
       return;
     }
 
-    if (e.target.value === "") {
-      newBoardResults.splice(boardResultIndex, 1);
-      dispatch(setBoardResults(newBoardResults));
-      return;
-    }
-
-    newBoardResults[boardResultIndex] = newResult;
     dispatch(setBoardResults(newBoardResults));
   };
 

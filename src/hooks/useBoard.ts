@@ -1,9 +1,9 @@
 import { BoardTypeEnum } from "@/enums";
-import { Board, BoardOption } from "@/interfaces";
+import { Board, BoardOption, BoardResult } from "@/interfaces";
 import { nanoid } from "@reduxjs/toolkit";
 import { cloneDeep } from "lodash";
 
-type ActionType =
+type BoardActionType =
   | "addOption"
   | "deleteOption"
   | "changeOption"
@@ -16,9 +16,11 @@ type ActionType =
   | "changeType"
   | "changeExplanation";
 
+type BoardResultActionType = "changeOption" | "clearOption" | "inputChange";
+
 const useBoard = () => {
   const getNewBoards = (
-    action: ActionType,
+    boardAction: BoardActionType,
     boards: Board[],
     boardId?: string,
     optionId?: string,
@@ -31,7 +33,7 @@ const useBoard = () => {
       return;
     }
 
-    switch (action) {
+    switch (boardAction) {
       case "addOption": {
         const newBoardsOptions = newBoards[boardIndex].options as BoardOption[];
         const newOption: BoardOption = {
@@ -186,7 +188,72 @@ const useBoard = () => {
     return newBoards;
   };
 
-  return { getNewBoards };
+  const getNewBoardsResult = (
+    boardResultAction: BoardResultActionType,
+    boardResults: BoardResult[],
+    boardId?: string,
+    optionId?: string,
+    value?: string
+  ) => {
+    const newBoardResults = cloneDeep(boardResults);
+    const boardResultIndex = newBoardResults.findIndex(
+      (boardResult) => boardResult.boardId === boardId
+    );
+
+    switch (boardResultAction) {
+      case "changeOption": {
+        if (!boardId || !optionId) {
+          break;
+        }
+
+        const newResult = { id: nanoid(), boardId, optionId };
+
+        if (boardResultIndex === -1) {
+          newBoardResults.push(newResult);
+          break;
+        }
+
+        if (boardResults[boardResultIndex].optionId === optionId) {
+          newBoardResults.splice(boardResultIndex, 1);
+          break;
+        }
+        newBoardResults[boardResultIndex] = newResult;
+        break;
+      }
+      case "clearOption": {
+        newBoardResults.splice(boardResultIndex, 1);
+        break;
+      }
+      case "inputChange": {
+        if (!boardId) {
+          break;
+        }
+
+        const newResult = {
+          id: nanoid(),
+          boardId,
+          answer: value,
+        };
+
+        if (boardResultIndex === -1) {
+          newBoardResults.push(newResult);
+          break;
+        }
+
+        if (value === "") {
+          newBoardResults.splice(boardResultIndex, 1);
+          break;
+        }
+
+        newBoardResults[boardResultIndex] = newResult;
+        break;
+      }
+    }
+
+    return newBoardResults;
+  };
+
+  return { getNewBoards, getNewBoardsResult };
 };
 
 export default useBoard;
