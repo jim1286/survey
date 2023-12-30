@@ -1,10 +1,8 @@
 import { Container } from "./styles";
 import { IconCirclePlus } from "@tabler/icons-react";
-import { useAppDispatch } from "@/redux/hook";
-import { addBoard } from "@/redux/features";
-import { BoardTypeEnum } from "@/enums";
-import { nanoid } from "@reduxjs/toolkit";
-import { Board } from "@/interfaces";
+import { useAppDispatch, useAppSelector } from "@/redux/hook";
+import { setBoards, setClickedBoardId } from "@/redux/features";
+import { useBoard } from "@/hooks";
 
 export interface Position {
   top: number | undefined;
@@ -13,22 +11,18 @@ export interface Position {
 
 function Toolbar() {
   const dispatch = useAppDispatch();
+  const boards = useAppSelector((state) => state.boardSlice.boards);
+  const { getNewBoards } = useBoard();
 
   const handleAdd = () => {
-    const newBoard: Board = {
-      id: nanoid(),
-      necessary: false,
-      explanation: false,
-      options: [
-        {
-          id: nanoid(),
-          value: "옵션 1",
-        },
-      ],
-      type: BoardTypeEnum.MULTIPLE_CHOICE,
-    };
+    const newBoards = getNewBoards("addBoard", boards);
 
-    dispatch(addBoard(newBoard));
+    if (!newBoards) {
+      return;
+    }
+
+    dispatch(setBoards(newBoards));
+    dispatch(setClickedBoardId(newBoards[newBoards.length - 1].id));
   };
 
   return (

@@ -17,10 +17,6 @@ export const boardSlice = createSlice({
   name: "board",
   initialState,
   reducers: {
-    addBoard: (state, action: PayloadAction<Board>) => {
-      state.boards = state.boards.concat(action.payload);
-      state.clickedBoardId = action.payload.id;
-    },
     setBoards: (state, action: PayloadAction<Board[]>) => {
       state.boards = action.payload;
     },
@@ -37,7 +33,6 @@ export const boardSlice = createSlice({
 });
 
 export const {
-  addBoard,
   setBoards,
   setBoardResults,
   setClickedBoardId,
