@@ -22,10 +22,10 @@ function BoardComponent({ board, onDragStart, onDragEnd, onDragEnter }: Props) {
   const dragItem = useRef<string>("");
   const dragOverItem = useRef<string>("");
   const boards = useAppSelector((state) => state.boardSlice.boards);
-  const [enteredOptionId, setEnteredOptionId] = useState("");
   const clickedBoardId = useAppSelector(
     (state) => state.boardSlice.clickedBoardId
   );
+  const [enteredOptionId, setEnteredOptionId] = useState("");
   const isClicked = clickedBoardId === board.id;
 
   const handleClickBoard = () => {

@@ -42,6 +42,34 @@ function ChoiceComponent({
   onDeleteOption,
   onAddOption,
 }: Props) {
+  const renderOption = (type: BoardTypeEnum, index: number) => {
+    switch (type) {
+      case BoardTypeEnum.CHECKBOX_CHOICE: {
+        return <Checkbox checked={false} />;
+      }
+      case BoardTypeEnum.MULTIPLE_CHOICE: {
+        return <RoundedCheckbox checked={false} />;
+      }
+      case BoardTypeEnum.DROPDOWN_CHOICE: {
+        return <NumberWrap>{index + 1}</NumberWrap>;
+      }
+    }
+  };
+
+  const renderAddOption = ((type) => {
+    switch (type) {
+      case BoardTypeEnum.CHECKBOX_CHOICE: {
+        return <Checkbox checked={false} />;
+      }
+      case BoardTypeEnum.MULTIPLE_CHOICE: {
+        return <RoundedCheckbox checked={false} />;
+      }
+      case BoardTypeEnum.DROPDOWN_CHOICE: {
+        return <NumberWrap>{options && options.length + 1}</NumberWrap>;
+      }
+    }
+  })(type);
+
   return (
     <Container>
       {options?.map((option, index) => (
@@ -58,13 +86,7 @@ function ChoiceComponent({
               <IconSelector />
             </MoveContainer>
           )}
-          {type === BoardTypeEnum.CHECKBOX_CHOICE ? (
-            <Checkbox checked={false} />
-          ) : type === BoardTypeEnum.MULTIPLE_CHOICE ? (
-            <RoundedCheckbox checked={false} />
-          ) : (
-            <NumberWrap>{index + 1}</NumberWrap>
-          )}
+          {renderOption(type, index)}
           {isClicked ? (
             <InputContainer>
               <Input
@@ -85,13 +107,7 @@ function ChoiceComponent({
       ))}
       {isClicked && (
         <OptionContainer>
-          {type === BoardTypeEnum.CHECKBOX_CHOICE ? (
-            <Checkbox checked={false} />
-          ) : type === BoardTypeEnum.MULTIPLE_CHOICE ? (
-            <RoundedCheckbox checked={false} />
-          ) : (
-            <NumberWrap>{options && options.length + 1}</NumberWrap>
-          )}
+          {renderAddOption}
           <Input placeholder="질문 추가" onClick={onAddOption} value={""} />
         </OptionContainer>
       )}
