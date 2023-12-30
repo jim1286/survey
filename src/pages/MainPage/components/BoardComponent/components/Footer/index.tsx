@@ -2,7 +2,11 @@ import { IconCopy, IconTrash } from "@tabler/icons-react";
 import { Switch } from "antd";
 import { Container, Divider, SwitchContainer } from "./styles";
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
-import { setBoards } from "@/redux/features";
+import {
+  setBoardResults,
+  setBoards,
+  setClickedBoardId,
+} from "@/redux/features";
 import { useBoard } from "@/hooks";
 
 interface Props {
@@ -13,8 +17,12 @@ interface Props {
 
 function Footer({ necessary, explanation, boardId }: Props) {
   const dispatch = useAppDispatch();
-  const { getNewBoards } = useBoard();
+  const { getNewBoards, getNewBoardsResult } = useBoard();
   const boards = useAppSelector((state) => state.boardSlice.boards);
+  const boardResults = useAppSelector((state) => state.boardSlice.boardResults);
+  const clickedBoardId = useAppSelector(
+    (state) => state.boardSlice.clickedBoardId
+  );
 
   const handleSwitchNecessary = () => {
     const newBoards = getNewBoards(
@@ -48,17 +56,28 @@ function Footer({ necessary, explanation, boardId }: Props) {
     dispatch(setBoards(newBoards));
   };
 
-  const handleCopy = () => {
+  const handleCopy = (e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
+    e.stopPropagation();
     const newBoards = getNewBoards("copyBoard", boards, boardId);
 
     if (!newBoards) {
       return;
     }
 
+    const boardIndex = newBoards.findIndex(
+      (newBoard) => newBoard.id === clickedBoardId
+    );
+
+    if (boardIndex === -1) {
+      return;
+    }
+
     dispatch(setBoards(newBoards));
+    dispatch(setClickedBoardId(newBoards[boardIndex + 1].id));
   };
 
-  const handleDelete = () => {
+  const handleDelete = (e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
+    e.stopPropagation();
     const newBoards = getNewBoards("deleteBoard", boards, boardId);
 
     if (!newBoards) {
@@ -66,12 +85,27 @@ function Footer({ necessary, explanation, boardId }: Props) {
     }
 
     dispatch(setBoards(newBoards));
+
+    const newBoardResults = getNewBoardsResult(
+      "deleteOption",
+      boardResults,
+      boardId
+    );
+
+    if (!newBoardResults) {
+      return;
+    }
+
+    dispatch(setBoardResults(newBoardResults));
   };
 
   return (
     <Container>
-      <IconCopy style={{ cursor: "pointer" }} onClick={handleCopy} />
-      <IconTrash style={{ cursor: "pointer" }} onClick={handleDelete} />
+      <IconCopy style={{ cursor: "pointer" }} onClick={(e) => handleCopy(e)} />
+      <IconTrash
+        style={{ cursor: "pointer" }}
+        onClick={(e) => handleDelete(e)}
+      />
       <Divider />
       <SwitchContainer>
         필수

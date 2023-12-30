@@ -1,8 +1,8 @@
 import { BoardContainer, Container, Empty, ToolbarContainer } from "./styles";
 import { BoardComponent, Toolbar } from "./components";
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
-import { useEffect, useRef, useState } from "react";
-import { setBoardResults, setBoards } from "@/redux/features";
+import { useRef } from "react";
+import { setBoards } from "@/redux/features";
 import { IconEye } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
 
@@ -12,16 +12,6 @@ function MainPage() {
   const dragItem = useRef<string>("");
   const dragOverItem = useRef<string>("");
   const boards = useAppSelector((state) => state.boardSlice.boards);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    if (boards.length !== 0) {
-      setIsLoading(false);
-      return;
-    }
-
-    fetchLocalStorage();
-  }, []);
 
   const handleDragStart = (boardId: string) => {
     dragItem.current = boardId;
@@ -57,42 +47,25 @@ function MainPage() {
     navigate("/preview");
   };
 
-  const fetchLocalStorage = () => {
-    const localBoards = localStorage.getItem("boards");
-    const localBoardResults = localStorage.getItem("boardResults");
-
-    if (localBoards) {
-      dispatch(setBoards(JSON.parse(localBoards)));
-    }
-
-    if (localBoardResults) {
-      dispatch(setBoardResults(JSON.parse(localBoardResults)));
-    }
-
-    setIsLoading(false);
-  };
-
   return (
-    !isLoading && (
-      <Container>
-        <IconEye style={{ cursor: "pointer" }} onClick={handleClickPreview} />
-        <BoardContainer>
-          {boards.length === 0 && <Empty />}
-          {boards.map((board) => (
-            <BoardComponent
-              key={board.id}
-              board={board}
-              onDragStart={handleDragStart}
-              onDragEnd={handleDragEnd}
-              onDragEnter={handleDragEnter}
-            />
-          ))}
-        </BoardContainer>
-        <ToolbarContainer>
-          <Toolbar />
-        </ToolbarContainer>
-      </Container>
-    )
+    <Container>
+      <IconEye style={{ cursor: "pointer" }} onClick={handleClickPreview} />
+      <BoardContainer>
+        {boards.length === 0 && <Empty />}
+        {boards.map((board) => (
+          <BoardComponent
+            key={board.id}
+            board={board}
+            onDragStart={handleDragStart}
+            onDragEnd={handleDragEnd}
+            onDragEnter={handleDragEnter}
+          />
+        ))}
+      </BoardContainer>
+      <ToolbarContainer>
+        <Toolbar />
+      </ToolbarContainer>
+    </Container>
   );
 }
 

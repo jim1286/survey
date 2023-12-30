@@ -1,5 +1,5 @@
 import { Container, ExplanationWrap, MoveContainer, Spacer } from "./styles";
-import { Board, BoardOption } from "@/interfaces";
+import { Board } from "@/interfaces";
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import { setBoards, setClickedBoardId } from "@/redux/features";
 import { Body, Footer, Header } from "./components";
@@ -7,7 +7,6 @@ import { Input } from "antd";
 import { ChangeEvent, useRef, useState } from "react";
 import { useBoard } from "@/hooks";
 import { IconSelector } from "@tabler/icons-react";
-import { cloneDeep } from "lodash";
 
 interface Props {
   board: Board;
@@ -29,7 +28,9 @@ function BoardComponent({ board, onDragStart, onDragEnd, onDragEnter }: Props) {
   const isClicked = clickedBoardId === board.id;
 
   const handleClickBoard = () => {
-    dispatch(setClickedBoardId(board.id));
+    if (board.id !== clickedBoardId) {
+      dispatch(setClickedBoardId(board.id));
+    }
   };
 
   const handleChangeExplanation = (e: ChangeEvent<HTMLInputElement>) => {
@@ -53,31 +54,20 @@ function BoardComponent({ board, onDragStart, onDragEnd, onDragEnter }: Props) {
   };
 
   const handleDragEnd = () => {
-    const newBoards = cloneDeep(boards);
-    const boardIndex = boards.findIndex((ele) => ele.id === board.id);
-
-    if (boardIndex === -1) {
-      return;
-    }
-
-    const newBoardsOptions = newBoards[boardIndex].options as BoardOption[];
-    const dragItemIndex = newBoardsOptions.findIndex(
-      (option) => option.id === dragItem.current
+    const newBoards = getNewBoards(
+      "changeBoard",
+      boards,
+      board.id,
+      dragItem.current,
+      dragOverItem.current
     );
-    const dragOverItemIndex = newBoardsOptions.findIndex(
-      (option) => option.id === dragOverItem.current
-    );
-
     dragItem.current = "";
     dragOverItem.current = "";
 
-    if (dragItemIndex === -1 || dragOverItemIndex === -1) {
+    if (!newBoards) {
       return;
     }
 
-    const temp = newBoardsOptions[dragItemIndex];
-    newBoardsOptions[dragItemIndex] = newBoardsOptions[dragOverItemIndex];
-    newBoardsOptions[dragOverItemIndex] = temp;
     dispatch(setBoards(newBoards));
   };
 

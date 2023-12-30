@@ -4,7 +4,7 @@ import { BoardOption } from "@/interfaces";
 import { Input, Select } from "antd";
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import { setBoardResults } from "@/redux/features";
-import { ChangeEvent, useEffect } from "react";
+import { ChangeEvent } from "react";
 import { ChoiceComponent, ClearButton } from "./components";
 import { useBoard } from "@/hooks";
 
@@ -19,16 +19,6 @@ function Body({ type, boardId, necessary, options }: Props) {
   const dispatch = useAppDispatch();
   const boardResults = useAppSelector((state) => state.boardSlice.boardResults);
   const { getNewBoardsResult } = useBoard();
-
-  useEffect(() => {
-    const debounceTimer = setTimeout(() => {
-      localStorage.setItem("boardResults", JSON.stringify(boardResults));
-    }, 1000);
-
-    return () => {
-      clearTimeout(debounceTimer);
-    };
-  }, [boardResults]);
 
   const handleOption = (optionId: string) => {
     const newBoardResults = getNewBoardsResult(
@@ -47,7 +37,7 @@ function Body({ type, boardId, necessary, options }: Props) {
 
   const handleClearOption = () => {
     const newBoardResults = getNewBoardsResult(
-      "clearOption",
+      "deleteOption",
       boardResults,
       boardId
     );

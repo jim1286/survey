@@ -10,13 +10,14 @@ type BoardActionType =
   | "addBoard"
   | "copyBoard"
   | "deleteBoard"
+  | "changeBoard"
   | "switchNecessary"
   | "switchExplanation"
   | "changeTitle"
   | "changeType"
   | "changeExplanation";
 
-type BoardResultActionType = "changeOption" | "clearOption" | "inputAnswer";
+type BoardResultActionType = "changeOption" | "inputAnswer" | "deleteOption";
 
 const useBoard = () => {
   const getNewBoards = (
@@ -114,11 +115,29 @@ const useBoard = () => {
           id: nanoid(),
         };
 
-        newBoards.splice(boardIndex, 0, newBoard);
+        newBoards.splice(boardIndex + 1, 0, newBoard);
         break;
       }
       case "deleteBoard": {
         newBoards.splice(boardIndex, 1);
+        break;
+      }
+      case "changeBoard": {
+        const newBoardsOptions = newBoards[boardIndex].options as BoardOption[];
+        const dragItemIndex = newBoardsOptions.findIndex(
+          (option) => option.id === optionId
+        );
+        const dragOverItemIndex = newBoardsOptions.findIndex(
+          (option) => option.id === value
+        );
+
+        if (dragItemIndex === -1 || dragOverItemIndex === -1) {
+          return;
+        }
+
+        const temp = newBoardsOptions[dragItemIndex];
+        newBoardsOptions[dragItemIndex] = newBoardsOptions[dragOverItemIndex];
+        newBoardsOptions[dragOverItemIndex] = temp;
         break;
       }
       case "switchNecessary": {
@@ -220,7 +239,7 @@ const useBoard = () => {
         newBoardResults[boardResultIndex] = newResult;
         break;
       }
-      case "clearOption": {
+      case "deleteOption": {
         newBoardResults.splice(boardResultIndex, 1);
         break;
       }
