@@ -13,6 +13,10 @@ export const BoardContainer = styled.div`
   flex: 1;
 `;
 
+export const Empty = styled.div`
+  width: 600px;
+`;
+
 export const ToolbarContainer = styled.div`
   height: 100%;
   position: relative;

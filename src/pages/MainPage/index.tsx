@@ -1,4 +1,4 @@
-import { BoardContainer, Container, ToolbarContainer } from "./styles";
+import { BoardContainer, Container, Empty, ToolbarContainer } from "./styles";
 import { BoardComponent, Toolbar } from "./components";
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import { useRef } from "react";
@@ -51,6 +51,7 @@ function MainPage() {
     <Container>
       <IconEye style={{ cursor: "pointer" }} onClick={handleClickPreview} />
       <BoardContainer>
+        {boards.length === 0 && <Empty />}
         {boards.map((board) => (
           <BoardComponent
             key={board.id}
