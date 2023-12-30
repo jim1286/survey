@@ -16,7 +16,7 @@ type BoardActionType =
   | "changeType"
   | "changeExplanation";
 
-type BoardResultActionType = "changeOption" | "clearOption" | "inputChange";
+type BoardResultActionType = "changeOption" | "clearOption" | "inputAnswer";
 
 const useBoard = () => {
   const getNewBoards = (
@@ -224,7 +224,7 @@ const useBoard = () => {
         newBoardResults.splice(boardResultIndex, 1);
         break;
       }
-      case "inputChange": {
+      case "inputAnswer": {
         if (!boardId) {
           break;
         }

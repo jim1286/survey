@@ -4,9 +4,12 @@ import { BoardComponent } from "./components";
 import { Button } from "antd";
 import { useEffect, useState } from "react";
 import { clearBoardResult, setBoardResults, setBoards } from "@/redux/features";
+import { IconArrowBack } from "@tabler/icons-react";
+import { useNavigate } from "react-router-dom";
 
 function PreviewPage() {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const boards = useAppSelector((state) => state.boardSlice.boards);
   const boardResults = useAppSelector((state) => state.boardSlice.boardResults);
   const necessaries = boards.filter((board) => board.necessary);
@@ -38,8 +41,8 @@ function PreviewPage() {
   }, [boardResults, necessaries]);
 
   const fetchLocalStorage = () => {
-    const localBoardResults = localStorage.getItem("boardResults");
     const localBoards = localStorage.getItem("boards");
+    const localBoardResults = localStorage.getItem("boardResults");
 
     if (localBoards) {
       dispatch(setBoards(JSON.parse(localBoards)));
@@ -57,9 +60,17 @@ function PreviewPage() {
     localStorage.removeItem("boardResults");
   };
 
+  const handleClickSurvey = () => {
+    navigate("/");
+  };
+
   return (
     !isLoading && (
       <Container>
+        <IconArrowBack
+          style={{ cursor: "pointer" }}
+          onClick={handleClickSurvey}
+        />
         <BoardContainer>
           {boards.map((board) => (
             <BoardComponent key={board.id} board={board} />

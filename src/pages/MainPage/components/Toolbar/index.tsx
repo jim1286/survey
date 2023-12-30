@@ -3,6 +3,7 @@ import { IconCirclePlus } from "@tabler/icons-react";
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import { setBoards, setClickedBoardId } from "@/redux/features";
 import { useBoard } from "@/hooks";
+import { useEffect } from "react";
 
 export interface Position {
   top: number | undefined;
@@ -13,6 +14,16 @@ function Toolbar() {
   const dispatch = useAppDispatch();
   const boards = useAppSelector((state) => state.boardSlice.boards);
   const { getNewBoards } = useBoard();
+
+  useEffect(() => {
+    const debounceTimer = setTimeout(() => {
+      localStorage.setItem("boards", JSON.stringify(boards));
+    }, 10);
+
+    return () => {
+      clearTimeout(debounceTimer);
+    };
+  }, [boards]);
 
   const handleAdd = () => {
     const newBoards = getNewBoards("addBoard", boards);

@@ -17,13 +17,11 @@ interface Props {
 
 function Body({ type, boardId, necessary, options }: Props) {
   const dispatch = useAppDispatch();
-  const boards = useAppSelector((state) => state.boardSlice.boards);
   const boardResults = useAppSelector((state) => state.boardSlice.boardResults);
   const { getNewBoardsResult } = useBoard();
 
   useEffect(() => {
     const debounceTimer = setTimeout(() => {
-      localStorage.setItem("boards", JSON.stringify(boards));
       localStorage.setItem("boardResults", JSON.stringify(boardResults));
     }, 1000);
 
@@ -63,7 +61,7 @@ function Body({ type, boardId, necessary, options }: Props) {
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const newBoardResults = getNewBoardsResult(
-      "inputChange",
+      "inputAnswer",
       boardResults,
       boardId,
       undefined,
